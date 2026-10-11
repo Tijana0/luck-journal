@@ -17,19 +17,30 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Set these under Settings → Secrets and variables → Actions,
+      # either as repository Variables or as repository Secrets.
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+      # Serve from https://<user>.github.io/<repo-name>/
+      BASE_PATH: /${{ github.event.repository.name }}/
     steps:
+      - name: Check Supabase settings
+        run: |
+          missing=""
+          [ -z "$VITE_SUPABASE_URL" ] && missing="$missing VITE_SUPABASE_URL"
+          [ -z "$VITE_SUPABASE_ANON_KEY" ] && missing="$missing VITE_SUPABASE_ANON_KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing:$missing. Add them under Settings → Secrets and variables → Actions (Variables or Secrets tab, repository level), then re-run this workflow."
+            exit 1
+          fi
+          echo "Supabase settings found."
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - run: npm install
       - run: npm run build
-        env:
-          # Serve from https://<user>.github.io/<repo-name>/
-          BASE_PATH: /${{ github.event.repository.name }}/
-          # Set these under Settings → Secrets and variables → Actions → Variables
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

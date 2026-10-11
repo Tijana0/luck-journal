@@ -62,7 +62,7 @@ npm run dev
 ### 3. Deploy to GitHub Pages
 
 1. Push the repo to GitHub.
-2. Go to **Settings → Secrets and variables → Actions → Variables** and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+2. Go to **Settings → Secrets and variables → Actions** and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` at repository level, on either the Variables or the Secrets tab. The build stops with a clear error if they are missing.
 3. Go to **Settings → Pages** and set **Source** to **GitHub Actions**.
 4. Push to `main`, or run the **Deploy to GitHub Pages** workflow. The site is served at `https://<user>.github.io/<repo>/`.
 
