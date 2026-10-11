@@ -24,9 +24,13 @@ export interface Actions {
   /** `data` is merged into the item's current data. */
   updateItem(id: string, patch: { data?: Record<string, unknown>; done?: boolean }): void
   moveItem(id: string, direction: -1 | 1): void
+  /** Put the given items into the given order, reusing the positions they already occupy. */
+  reorderItems(orderedIds: string[]): void
   deleteItem(id: string): void
   setPracticed(itemId: string, day: string, on: boolean): void
   importLayout(layout: Layout, options: { useHeader: boolean }): string | undefined
+  /** Delete every page (and so every block, item and habit log) and reset the header. */
+  resetJournal(): void
   reload(): Promise<void>
 }
 
@@ -285,6 +289,17 @@ export function JournalProvider({ userId, children }: ProviderProps) {
         ])
       },
 
+      reorderItems(orderedIds) {
+        const byId = new Map(stateRef.current.items.map((i) => [i.id, i]))
+        const items = orderedIds.map((id) => byId.get(id)).filter((i): i is Item => Boolean(i))
+        const slots = items.map((i) => i.position).sort((a, b) => a - b)
+        const next = new Map(items.map((i, k) => [i.id, slots[k]]))
+        const changed = items.filter((i) => next.get(i.id) !== i.position)
+        if (changed.length === 0) return
+        commit((s) => ({ ...s, items: s.items.map((i) => (next.has(i.id) ? { ...i, position: next.get(i.id) as number } : i)) }))
+        write(() => changed.map((i) => supabase.from('items').update({ position: next.get(i.id) }).eq('id', i.id)))
+      },
+
       deleteItem(id) {
         commit((s) => ({ ...s, items: s.items.filter((i) => i.id !== id), logs: s.logs.filter((l) => l.item_id !== id) }))
         write(() => [supabase.from('items').delete().eq('id', id)])
@@ -321,6 +336,15 @@ export function JournalProvider({ userId, children }: ProviderProps) {
         if (rows.blocks.length) write(() => [supabase.from('blocks').insert(withUser(rows.blocks))])
         if (rows.items.length) write(() => [supabase.from('items').insert(withUser(rows.items))])
         return rows.pages[0]?.id
+      },
+
+      resetJournal() {
+        const pageIds = stateRef.current.pages.map((p) => p.id)
+        commit(() => ({ settings: DEFAULT_SETTINGS, pages: [], blocks: [], items: [], logs: [] }))
+        write(() => [
+          ...pageIds.map((id) => supabase.from('pages').delete().eq('id', id)),
+          supabase.from('journal_settings').delete().eq('user_id', userId),
+        ])
       },
 
       reload,

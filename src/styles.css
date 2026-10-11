@@ -179,6 +179,13 @@ fieldset.sub legend { padding: 0 6px; }
 .section-edit .field:nth-child(2) { grid-column: 1; }
 .section-edit .icon-btn { grid-row: 1; grid-column: 2; }
 
+.toggle { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1.5px solid var(--rule); border-radius: 10px; cursor: pointer; }
+.toggle input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--pen); flex: none; }
+.toggle span { display: grid; gap: 2px; }
+.toggle small { color: var(--ink-soft); font-size: 13.5px; }
+.shuffle-note { margin: -6px 0 14px; font-size: 14px; color: var(--ink-soft); }
+.danger-zone { border-top: 1.5px dashed var(--rule); margin-top: 18px; padding-top: 14px; }
+
 /* ── Category colors ──────────────────────────────────────────────────── */
 [data-c='blue'] { --cat: var(--c-blue); }
 [data-c='green'] { --cat: var(--c-green); }

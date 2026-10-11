@@ -11,7 +11,7 @@ Built with **React + TypeScript + Vite**, stored in **Supabase** (Postgres with 
 
   | Block | What it does |
   |---|---|
-  | Challenge list | Numbered goals with a checkbox, a category tag, a note on how it went, and a progress bar |
+  | Challenge list | Numbered goals with a checkbox, a category tag, a note on how it went, a progress bar, and an optional Shuffle button for picking what's next |
   | Habit tracker | Habits with their own weekly goal. Tap the days you showed up and see weeks on target. Queue habits for later. |
   | Idea cards | Cards with a status, a summary and labeled sections |
   | Notes | Lined, handwriting-style free writing |
@@ -21,7 +21,7 @@ Built with **React + TypeScript + Vite**, stored in **Supabase** (Postgres with 
 
 - **Write mode and Edit mode.** Write mode is for using the journal: ticking, typing, logging days. Edit mode is for changing its structure. Keeping them apart means you can't rearrange things by accident on your phone.
 - **Templates or a blank start.** Pick a blank journal, a 30-day challenge, a habit tracker or an idea board, then make it your own.
-- **Export and import layouts.** Save your whole journal as a JSON file, as a backup or to recreate it in another account. You can also add the pages from a file or a template to an existing journal.
+- **Export and import layouts.** Save your whole journal as a JSON file, as a backup or to recreate it in another account. You can also add the pages from a file or a template to an existing journal, or start over from the layout picker.
 - **Username sign-in**, light and dark mode, works at phone width, and a back-to-top button for long pages.
 
 ## How it fits together

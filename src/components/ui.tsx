@@ -14,6 +14,8 @@ const paths = {
   upload: 'M12 20V9M7 14l5-5 5 5M5 4h14',
   pen: 'M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4',
   book: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5zM4 19a2 2 0 0 1 2-2h13',
+  shuffle: 'M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5',
+  undo: 'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3',
 } as const
 
 export type IconName = keyof typeof paths

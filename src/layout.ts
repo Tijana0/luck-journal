@@ -119,7 +119,7 @@ function blockRows(lb: LayoutBlock, pageId: string, position: number): { block: 
   switch (lb.type) {
     case 'challenge': {
       const d = read.challenge({ ...base.data, ...lb })
-      data = { noteLabel: d.noteLabel, categories: Array.isArray(lb.categories) ? d.categories : base.data.categories }
+      data = { noteLabel: d.noteLabel, shuffle: d.shuffle, categories: Array.isArray(lb.categories) ? d.categories : base.data.categories }
       for (const s of src) {
         const it = read.challengeItem(s)
         pushItem({ ...it }, s.done === true)

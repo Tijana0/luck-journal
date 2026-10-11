@@ -13,6 +13,7 @@ export function ChallengeBlock({ block, items, mode }: BlockProps) {
   const categories = new Map(d.categories.map((c) => [c.id, c]))
   const taken = items.filter((i) => i.done).length
   const [count, setCount] = useState(30)
+  const [undoOrder, setUndoOrder] = useState<string[] | null>(null)
 
   if (mode === 'edit') {
     const setCategories = (next: Category[]) => actions.updateBlock(block.id, { data: { categories: next } })
@@ -22,6 +23,14 @@ export function ChallengeBlock({ block, items, mode }: BlockProps) {
           <label className="eyebrow" htmlFor={`${block.id}-note`}>Note prompt</label>
           <DebouncedField id={`${block.id}-note`} className="field" value={d.noteLabel} onCommit={(noteLabel) => actions.updateBlock(block.id, { data: { noteLabel } })} placeholder="What happened?" />
         </div>
+
+        <label className="toggle" htmlFor={`${block.id}-shuffle`}>
+          <input id={`${block.id}-shuffle`} type="checkbox" checked={d.shuffle} onChange={(e) => actions.updateBlock(block.id, { data: { shuffle: e.target.checked } })} />
+          <span>
+            <strong>Show a Shuffle button in Write mode</strong>
+            <small>Mixes up the order of the items you haven't done yet. Done items and empty slots stay where they are.</small>
+          </span>
+        </label>
 
         <fieldset className="sub">
           <legend className="eyebrow">Categories</legend>
@@ -106,6 +115,23 @@ export function ChallengeBlock({ block, items, mode }: BlockProps) {
   const firstBlank = items.findIndex((i) => isOpen(i.data))
   const showDivider = firstBlank > 0
 
+  // Only unfinished items that have content take part in a shuffle.
+  const shufflable = items.filter((i) => !i.done && !isOpen(i.data))
+  const shuffle = () => {
+    const before = shufflable.map((i) => i.id)
+    const ids = [...before]
+    for (let k = ids.length - 1; k > 0; k--) {
+      const r = Math.floor(Math.random() * (k + 1))
+      ;[ids[k], ids[r]] = [ids[r], ids[k]]
+    }
+    actions.reorderItems(ids)
+    setUndoOrder(before)
+  }
+  const undo = () => {
+    if (undoOrder) actions.reorderItems(undoOrder)
+    setUndoOrder(null)
+  }
+
   return (
     <>
       <div className="progress">
@@ -115,7 +141,20 @@ export function ChallengeBlock({ block, items, mode }: BlockProps) {
         <span className="count">
           {taken} / {items.length} done
         </span>
+        {d.shuffle && (
+          <button type="button" className="btn small" onClick={shuffle} disabled={shufflable.length < 2} title="Mix up the order of the items you haven't done yet">
+            <Icon name="shuffle" size={16} /> Shuffle
+          </button>
+        )}
       </div>
+      {d.shuffle && undoOrder && (
+        <p className="shuffle-note" role="status">
+          Shuffled {shufflable.length} open items.{' '}
+          <button type="button" className="link" onClick={undo}>
+            Undo
+          </button>
+        </p>
+      )}
 
       {d.categories.length > 0 && (
         <div className="legend">

@@ -58,6 +58,8 @@ export interface Category {
 export interface ChallengeData {
   noteLabel: string
   categories: Category[]
+  /** Show a Shuffle button in Write mode. */
+  shuffle: boolean
 }
 export interface ChallengeItem {
   title: string
@@ -137,6 +139,7 @@ export const read = {
   challenge(d: Record<string, unknown>): ChallengeData {
     return {
       noteLabel: str(d.noteLabel, 'What happened?'),
+      shuffle: d.shuffle === true,
       categories: arr(d.categories).map((c, i) => {
         const o = obj(c)
         return { id: str(o.id, `c${i}`), label: str(o.label), color: isColor(o.color) ? o.color : CATEGORY_COLORS[i % CATEGORY_COLORS.length] }
