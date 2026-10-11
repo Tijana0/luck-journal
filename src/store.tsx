@@ -29,8 +29,6 @@ export interface Actions {
   deleteItem(id: string): void
   setPracticed(itemId: string, day: string, on: boolean): void
   importLayout(layout: Layout, options: { useHeader: boolean }): string | undefined
-  /** Delete every page (and so every block, item and habit log) and reset the header. */
-  resetJournal(): void
   reload(): Promise<void>
 }
 
@@ -336,15 +334,6 @@ export function JournalProvider({ userId, children }: ProviderProps) {
         if (rows.blocks.length) write(() => [supabase.from('blocks').insert(withUser(rows.blocks))])
         if (rows.items.length) write(() => [supabase.from('items').insert(withUser(rows.items))])
         return rows.pages[0]?.id
-      },
-
-      resetJournal() {
-        const pageIds = stateRef.current.pages.map((p) => p.id)
-        commit(() => ({ settings: DEFAULT_SETTINGS, pages: [], blocks: [], items: [], logs: [] }))
-        write(() => [
-          ...pageIds.map((id) => supabase.from('pages').delete().eq('id', id)),
-          supabase.from('journal_settings').delete().eq('user_id', userId),
-        ])
       },
 
       reload,

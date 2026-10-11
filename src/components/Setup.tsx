@@ -71,7 +71,6 @@ export function JournalTools({ onPagesAdded }: { onPagesAdded: (firstPageId: str
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [templateId, setTemplateId] = useState(TEMPLATES[1]?.id ?? TEMPLATES[0].id)
-  const [confirmReset, setConfirmReset] = useState(false)
 
   const exportLayout = () => {
     const blob = new Blob([JSON.stringify(stateToLayout(state), null, 2) + '\n'], { type: 'application/json' })
@@ -137,26 +136,6 @@ export function JournalTools({ onPagesAdded }: { onPagesAdded: (firstPageId: str
       </div>
       {error && <p className="error" role="alert">{error}</p>}
       {notice && <p className="notice" role="status">{notice}</p>}
-
-      <div className="danger-zone">
-        <h3>Start over</h3>
-        <p>Deletes every page and everything written in them, then shows the starting layouts again. Export first if you want to keep a copy.</p>
-        {confirmReset ? (
-          <div className="row" role="group" aria-label="Confirm start over">
-            <span className="confirm">Delete the whole journal?</span>
-            <button type="button" className="btn danger small" onClick={() => actions.resetJournal()}>
-              Delete everything
-            </button>
-            <button type="button" className="btn small" onClick={() => setConfirmReset(false)}>
-              Keep my journal
-            </button>
-          </div>
-        ) : (
-          <button type="button" className="btn" onClick={() => setConfirmReset(true)}>
-            <Icon name="trash" size={16} /> Start over
-          </button>
-        )}
-      </div>
     </section>
   )
 }

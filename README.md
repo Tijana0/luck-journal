@@ -21,7 +21,7 @@ Built with **React + TypeScript + Vite**, stored in **Supabase** (Postgres with 
 
 - **Write mode and Edit mode.** Write mode is for using the journal: ticking, typing, logging days. Edit mode is for changing its structure. Keeping them apart means you can't rearrange things by accident on your phone.
 - **Templates or a blank start.** Pick a blank journal, a 30-day challenge, a habit tracker or an idea board, then make it your own.
-- **Export and import layouts.** Save your whole journal as a JSON file, as a backup or to recreate it in another account. You can also add the pages from a file or a template to an existing journal, or start over from the layout picker.
+- **Export and import layouts.** Save your whole journal as a JSON file, as a backup or to recreate it in another account. You can also add the pages from a file or a template to an existing journal.
 - **Username sign-in**, light and dark mode, works at phone width, and a back-to-top button for long pages.
 
 ## How it fits together
